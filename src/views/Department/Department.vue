@@ -4,11 +4,10 @@
     <!-- <toolbar :buttonList="buttonList" @callFunction="callFunction"></toolbar> -->
 
     <!--列表-->
-    <a-table :data-source="departments" :columns="columns" :rowKey="'Id'" v-loading="listLoading"
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: dialogCheck }" class="custom-tbl"
-      style="width: 100%" ref="table">
+    <a-table :data-source="departments" :columns="columns" :rowKey="'Id'" :loading="listLoading"
+      :expanded-row-keys.sync="expandedRowKeys"  :row-selection="rowSelection" style="width: 100%" ref="table">
       <span slot="Status" slot-scope="Status">
-        <a-tag :type="Status ? 'success' : 'danger'" disable-transitions>{{ !Status ? "否" : "是"
+        <a-tag :color="Status ? 'green' : 'red'" disable-transitions>{{ !Status ? "否" : "是"
         }}</a-tag>
       </span>
     </a-table>
@@ -25,6 +24,7 @@ import {
   editDepartment,
   addDepartment,
   getDepartmentTree,
+  getDepartmentListPage,
 } from "@/api/api";
 import { getButtonList } from "@/permission";
 import Toolbar from "../../components/Toolbar";
@@ -73,11 +73,25 @@ const columns = [
   },
 ];
 
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+  },
+  onSelect: (record, selected, selectedRows) => {
+    console.log(record, selected, selectedRows);
+  },
+  onSelectAll: (selected, selectedRows, changeRows) => {
+    console.log(selected, selectedRows, changeRows);
+  },
+};
+
 export default {
   components: { Toolbar },
   data() {
     return {
       columns,
+      rowSelection,
+      expandedRowKeys: [],
       selectedRowKeys: [],
       buttonList: [],
       currentRow: null,
@@ -140,7 +154,7 @@ export default {
   methods: {
     dialogCheck(selection, row) {
       this.currentRow = null;
-      this.$refs.table.clearSelection();
+      // this.$refs.table.clearSelection();
       if (selection.length === 0) {
         return;
       }
@@ -151,7 +165,7 @@ export default {
     selectCurrentRow(val) {
       if (val) {
         this.currentRow = val;
-        this.$refs.table.clearSelection();
+        // this.$refs.table.clearSelection();
         this.$refs.table.toggleRowSelection(val, true);
       }
     },
@@ -200,8 +214,8 @@ export default {
       this.listLoading = true;
 
       //NProgress.start();
-      getDepartmentTreeTable(para).then((res) => {
-        this.departments = res.data.response;
+      getDepartmentListPage(para).then((res) => {
+        this.departments = res.data.response.data;
         this.listLoading = false;
         //NProgress.done();
       });
@@ -421,10 +435,10 @@ export default {
   mounted() {
     this.handleQuery();
 
-    let routers = window.localStorage.router
+    let routers = window.localStorage.router && window.localStorage.router.length > 20
       ? JSON.parse(window.localStorage.router)
       : [];
-    this.buttonList = getButtonList(this.$route.path, routers);
+    // this.buttonList = getButtonList(this.$route.path, routers);
   },
 };
 </script>

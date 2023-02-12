@@ -303,6 +303,7 @@ export default {
             )
 
             window.localStorage.setItem('set_routers', JSON.stringify(data.response))
+
             this.$router.push({ path: _this.$route.query.redirect ? _this.$route.query.redirect : '/' })
             this.isLoginError = false
           }
