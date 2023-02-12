@@ -1,9 +1,9 @@
 <template>
   <global-footer class="footer custom-render">
     <template v-slot:links>
-      <a href="https://www.github.com/vueComponent/pro-layout" target="_blank">Pro Layout</a>
-      <a href="https://www.github.com/vueComponent/ant-design-vue-pro" target="_blank">Github</a>
-      <a href="https://www.github.com/sendya/" target="_blank">@Sendya</a>
+      <a href="mvp.neters.club" target="_blank">laozhang is MVP</a>
+      <a href="https://github.com/anjoy8/Blog.Admin.Pro.git" target="_blank">Github</a>
+      <a href="https://neters.club" target="_blank">neters.club</a>
     </template>
     <template v-slot:copyright>
       <a href="https://github.com/vueComponent" target="_blank">vueComponent</a>
