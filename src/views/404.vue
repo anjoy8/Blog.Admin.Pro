@@ -1,5 +1,6 @@
 <template>
   <div>
+    404 页面
     404 page
   </div>
 </template>
