@@ -5,7 +5,7 @@
 
     <!--列表-->
     <a-table :data-source="departments" :columns="columns" :rowKey="'Id'" :loading="listLoading"
-      :expanded-row-keys.sync="expandedRowKeys"  :row-selection="rowSelection" style="width: 100%" ref="table">
+      :expanded-row-keys.sync="expandedRowKeys" :row-selection="rowSelection" style="width: 100%" ref="table">
       <span slot="Status" slot-scope="Status">
         <a-tag :color="Status ? 'green' : 'red'" disable-transitions>{{ !Status ? "否" : "是"
         }}</a-tag>
