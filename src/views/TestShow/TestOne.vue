@@ -1,5 +1,5 @@
 <template>
-  <div>我是测试的第一个页面. my name is {{ msg }}</div>
+  <div>我是测试的第一个页面. my name is {{ msg }} .....</div>
 </template>
 
 <script>
