@@ -3,6 +3,7 @@ const generate = require('@ant-design/colors/lib/generate').default
 
 const getAntdSerials = (color) => {
   // 淡化（即less的tint）
+  // 尽量不使用less
   const lightens = new Array(9).fill().map((t, i) => {
     return ThemeColorReplacer.varyColor.lighten(color, i / 10)
   })
