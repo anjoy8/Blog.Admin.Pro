@@ -8,12 +8,12 @@ const userApi = {
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
   RequestLogin: '/login/jwttoken3.0',
-  GetInfoByToken: '/user/getInfoByToken',
+  GetInfoByToken: '/User/getInfoByToken',
   GetNavigationBar: '/permission/GetNavigationBar',
   SendSmsErr: '/account/sms_err',
   // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+  UserInfo: '/User/info',
+  UserMenu: '/User/nav'
 }
 
 /**

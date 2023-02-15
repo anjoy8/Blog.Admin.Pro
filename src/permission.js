@@ -10,7 +10,7 @@ import { generatorShowDynamicRouter } from '@/router/generator-routers'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const allowList = ['login', 'register', 'registerResult'] // no redirect allowList
-const loginRoutePath = '/user/login'
+const loginRoutePath = '/User/login'
 const defaultRoutePath = '/dashboard/workplace'
 
 router.beforeEach((to, from, next) => {

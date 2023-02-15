@@ -167,7 +167,7 @@ const ToLogin = params => {
 };
 
 export const getUserByToken = params => {
-    return axios.get(`${base}/api/user/getInfoByToken`, { params: params }).then(res => res.data);
+    return axios.get(`${base}/api/User/getInfoByToken`, { params: params }).then(res => res.data);
 };
 
 
@@ -181,16 +181,16 @@ export const testapi = pa => {
 
 // 用户管理
 export const getUserListPage = params => {
-    return axios.get(`${base}/api/user/get`, { params: params });
+    return axios.get(`${base}/api/User/get`, { params: params });
 };
 export const removeUser = params => {
-    return axios.delete(`${base}/api/user/delete`, { params: params });
+    return axios.delete(`${base}/api/User/delete`, { params: params });
 };
 export const editUser = params => {
-    return axios.put(`${base}/api/user/put`, params);
+    return axios.put(`${base}/api/User/put`, params);
 };
 export const addUser = params => {
-    return axios.post(`${base}/api/user/post`, params);
+    return axios.post(`${base}/api/User/post`, params);
 };
 export const batchRemoveUser = params => {
     return axios.delete(`${base}/api/Claims/BatchDelete`, { params: params });//没做
