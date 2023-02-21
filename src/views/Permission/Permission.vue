@@ -4,42 +4,22 @@
     <!-- <toolbar :buttonList="buttonList" @callFunction="callFunction"></toolbar> -->
 
     <!--列表-->
-    <el-table :data="users" v-loading="listLoading" row-key="Id" border lazy :load="load"
-      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" style="width: 100%" ref="table"
-      @select="dialogCheck" @row-click="selectCurrentRow" class="custom-tbl">
-      <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column type="index" width="80"></el-table-column>
-      <el-table-column label="菜单/按钮" width="200">
-        <template slot-scope="scope">
-          <i class="fa" :class="scope.row.Icon"></i>
-
-          {{ scope.row.Name }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="Code" label="路由地址" width></el-table-column>
-      <el-table-column prop="MName" label="API接口" width></el-table-column>
-      <el-table-column prop="OrderSort" label="Sort" width></el-table-column>
-      <el-table-column prop="IsButton" label="是否按钮" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="!scope.row.IsButton ? 'success' : 'danger'" disable-transitions>{{ !scope.row.IsButton ? "否" :
-            "是" }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="Func" label="按钮事件" width></el-table-column>
-      <el-table-column prop="IsHide" label="是否隐藏" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="!scope.row.IsHide ? 'success' : 'danger'" disable-transitions>{{ !scope.row.IsHide ? "否" : "是"
-          }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="IskeepAlive" label="keepAlive" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="!scope.row.IskeepAlive ? 'success' : 'danger'" disable-transitions>{{ !scope.row.IskeepAlive ?
-            "否" : "是" }}</el-tag>
-        </template>
-      </el-table-column>
-    </el-table>
-
+    <a-table :data-source="permissions" :columns="columns" :rowKey="'Id'" :loading="listLoading"
+      :expanded-row-keys.sync="expandedRowKeys" :row-selection="rowSelection" style="width: 100%" ref="table">
+      <span slot="IsButton" slot-scope="IsButton">
+        <a-tag :color="IsButton ? 'green' : 'red'" disable-transitions>{{ !IsButton ? "否" : "是"
+        }}</a-tag>
+      </span>
+      <span slot="IsHide" slot-scope="IsHide">
+        <a-tag :color="IsHide ? 'green' : 'red'" disable-transitions>{{ !IsHide ? "否" : "是"
+        }}</a-tag>
+      </span>
+      <span slot="IskeepAlive" slot-scope="IskeepAlive">
+        <a-tag :color="IskeepAlive ? 'green' : 'red'" disable-transitions>{{ !IskeepAlive ? "否" : "是"
+        }}</a-tag>
+      </span>
+    </a-table>
+    
 
 
   </section>
@@ -62,47 +42,53 @@ import Toolbar from "../../components/Toolbar";
 
 const columns = [
   {
-    title: '名称',
-    dataIndex: 'uRealName',
-    key: 'uRealName',
+    title: '菜单/按钮',
+    dataIndex: 'Name',
+    key: 'Name',
   },
   {
-    title: '登录名',
-    dataIndex: 'uLoginName',
-    key: 'uLoginName',
+    title: '路由地址',
+    dataIndex: 'Code',
+    key: 'Code',
   },
   {
-    title: '角色',
-    key: 'RoleNames',
-    dataIndex: 'RoleNames',
-    scopedSlots: { customRender: 'RoleNames' },
+    title: 'API接口',
+    dataIndex: 'MName',
+    key: 'MName',
   },
   {
-    title: '所属部门',
-    dataIndex: 'DepartmentName',
-    key: 'DepartmentName',
+    title: '排序',
+    dataIndex: 'OrderSort',
+    key: 'OrderSort',
   },
   {
-    title: '性别',
-    dataIndex: 'sex',
-    key: 'sex',
+    title: '按钮事件',
+    dataIndex: 'Func',
+    key: 'Func',
   },
   {
-    title: '生日',
-    dataIndex: 'birth',
-    key: 'birth',
+    title: '是否按钮',
+    key: 'IsButton',
+    dataIndex: 'IsButton',
+    scopedSlots: { customRender: 'IsButton' },
   },
   {
-    title: '状态',
-    key: 'uStatus',
-    dataIndex: 'uStatus',
-    scopedSlots: { customRender: 'uStatus' },
+    title: '是否隐藏',
+    key: 'IsHide',
+    dataIndex: 'IsHide',
+    scopedSlots: { customRender: 'IsHide' },
   },
   {
-    title: '创建时间',
-    dataIndex: 'uCreateTime',
-    key: 'uCreateTime',
+    title: 'keepAlive',
+    key: 'IskeepAlive',
+    dataIndex: 'IskeepAlive',
+    scopedSlots: { customRender: 'IskeepAlive' },
   },
+  // {
+  //   title: '创建时间',
+  //   dataIndex: 'CreateTime',
+  //   key: 'CreateTime',
+  // },
 ];
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -127,7 +113,7 @@ export default {
       filters: {
         Name: "",
       },
-      users: [],
+      permissions: [],
       modules: [], //接口api列表
       statusList: [
         { Name: "激活", value: true },
@@ -271,13 +257,14 @@ export default {
     getPermissions() {
       let para = {
         page: this.page,
+        pageSize: 9999,
         key: this.filters.name,
       };
       this.listLoading = true;
 
       //NProgress.start();
-      getPermissionTreeTable(para).then((res) => {
-        this.users = res.data.response;
+      getPermissionListPage(para).then((res) => {
+        this.permissions = res.data.response.data;
         this.listLoading = false;
         //NProgress.done();
       });
@@ -531,10 +518,11 @@ export default {
       this.modules = res.data.response.data;
     });
 
-    let routers = window.localStorage.router
+
+    let routers = window.localStorage.router && window.localStorage.router.length > 20
       ? JSON.parse(window.localStorage.router)
       : [];
-    this.buttonList = getButtonList(this.$route.path, routers);
+    // this.buttonList = getButtonList(this.$route.path, routers);
   },
 };
 </script>

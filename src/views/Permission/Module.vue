@@ -4,27 +4,14 @@
     <!-- <toolbar :buttonList="buttonList" @callFunction="callFunction"></toolbar> -->
 
     <!--列表-->
-    <el-table :data="users" v-loading="listLoading" style="width: 100%" ref="table" @select="dialogCheck"
-      @row-click="selectCurrentRow" class="custom-tbl">
-      <el-table-column type="selection" width="50"> </el-table-column>
-      <el-table-column type="index" width="80"> </el-table-column>
-      <el-table-column prop="LinkUrl" label="接口地址" width="" sortable>
-      </el-table-column>
-      <el-table-column prop="Name" label="描述" width="300" sortable>
-      </el-table-column>
-      <el-table-column prop="CreateTime" label="创建时间" :formatter="formatCreateTime" width="" sortable>
-      </el-table-column>
-      <el-table-column prop="CreateBy" label="创建者" width="" sortable>
-      </el-table-column>
-      <el-table-column prop="Enabled" label="状态" width="" sortable>
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.Enabled ? 'success' : 'danger'" disable-transitions>{{ scope.row.Enabled ? "正常" : "禁用"
-          }}
-          </el-tag>
-        </template>
-      </el-table-column>
-
-    </el-table>
+    <a-table :data-source="modules" :columns="columns" :rowKey="'Id'" :loading="listLoading"
+      :expanded-row-keys.sync="expandedRowKeys" :row-selection="rowSelection" style="width: 100%" ref="table">
+      <span slot="Enabled" slot-scope="Enabled">
+        <a-tag :color="Enabled ? 'green' : 'red'" disable-transitions>{{ !Enabled ? "禁用" : "正常"
+        }}</a-tag>
+      </span>
+    </a-table>
+   
   </section>
 </template>
 
@@ -41,46 +28,30 @@ import Toolbar from "../../components/Toolbar";
 
 const columns = [
   {
-    title: '名称',
-    dataIndex: 'uRealName',
-    key: 'uRealName',
+    title: '接口地址',
+    dataIndex: 'LinkUrl',
+    key: 'LinkUrl',
   },
   {
-    title: '登录名',
-    dataIndex: 'uLoginName',
-    key: 'uLoginName',
-  },
-  {
-    title: '角色',
-    key: 'RoleNames',
-    dataIndex: 'RoleNames',
-    scopedSlots: { customRender: 'RoleNames' },
-  },
-  {
-    title: '所属部门',
-    dataIndex: 'DepartmentName',
-    key: 'DepartmentName',
-  },
-  {
-    title: '性别',
-    dataIndex: 'sex',
-    key: 'sex',
-  },
-  {
-    title: '生日',
-    dataIndex: 'birth',
-    key: 'birth',
-  },
-  {
-    title: '状态',
-    key: 'uStatus',
-    dataIndex: 'uStatus',
-    scopedSlots: { customRender: 'uStatus' },
+    title: '描述',
+    dataIndex: 'Name',
+    key: 'Name',
   },
   {
     title: '创建时间',
-    dataIndex: 'uCreateTime',
-    key: 'uCreateTime',
+    dataIndex: 'CreateTime',
+    key: 'CreateTime',
+  },
+  {
+    title: '创建者',
+    dataIndex: 'CreateBy',
+    key: 'CreateBy',
+  },
+  {
+    title: '状态',
+    key: 'Enabled',
+    dataIndex: 'Enabled',
+    scopedSlots: { customRender: 'Enabled' },
   },
 ];
 const rowSelection = {
@@ -107,7 +78,7 @@ export default {
       filters: {
         LinkUrl: "",
       },
-      users: [],
+      modules: [],
       statusList: [
         { LinkUrl: "激活", value: true },
         { LinkUrl: "禁用", value: false },
@@ -199,7 +170,7 @@ export default {
       //NProgress.start();
       getModuleListPage(para).then((res) => {
         this.total = res.data.response.dataCount;
-        this.users = res.data.response.data;
+        this.modules = res.data.response.data;
         this.listLoading = false;
         //NProgress.done();
       });
@@ -367,10 +338,10 @@ export default {
   mounted() {
     this.getModules();
 
-    let routers = window.localStorage.router
+    let routers = window.localStorage.router && window.localStorage.router.length > 20
       ? JSON.parse(window.localStorage.router)
       : [];
-    this.buttonList = getButtonList(this.$route.path, routers);
+    // this.buttonList = getButtonList(this.$route.path, routers);
   },
 };
 </script>
